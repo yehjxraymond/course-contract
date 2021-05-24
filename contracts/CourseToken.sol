@@ -1,8 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.5.17;
 
-import "hardhat/console.sol";
-
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v2.5.1/contracts
 import "@openzeppelin/contracts/token/ERC20/ERC20Mintable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol";
