@@ -1,4 +1,10 @@
-const LEVEL_CONTRACTS = ["HelloWorld", "ReadAndWrite", "MyBlockNumber", "WishingWell"];
+const LEVEL_CONTRACTS = [
+  "HelloWorld",
+  "ReadAndWrite",
+  "MyBlockNumber",
+  "WishingWell",
+  "DirtyDirtySecret",
+];
 
 const deployAllLevels = async (courseContract, ethers, log) => {
   const levels = [];

@@ -14,8 +14,13 @@ describe("CourseContract", () => {
     const tokenAddress = await courseContract.courseToken();
     const courseToken = await ethers.getContractAt("CourseToken", tokenAddress);
 
-    const [helloWorld, readAndWrite, myBlockNumber, wishingWell] =
-      await deployAllLevels(courseContract, ethers, false);
+    const [
+      helloWorld,
+      readAndWrite,
+      myBlockNumber,
+      wishingWell,
+      dirtyDirtySecret,
+    ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
     await helloWorld.connect(addr1).helloWorld();
@@ -55,6 +60,16 @@ describe("CourseContract", () => {
     });
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("40000000000000000000")
+    );
+
+    // Attempt DirtyDirtySecret
+    const dirtySecret = await owner.provider.getStorageAt(
+      dirtyDirtySecret.address,
+      3
+    );
+    await dirtyDirtySecret.submit(dirtySecret);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("60000000000000000000")
     );
   });
 });
