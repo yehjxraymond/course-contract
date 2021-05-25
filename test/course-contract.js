@@ -20,6 +20,7 @@ describe("CourseContract", () => {
       myBlockNumber,
       wishingWell,
       dirtyDirtySecret,
+      selectMeNot,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -70,6 +71,13 @@ describe("CourseContract", () => {
     await dirtyDirtySecret.submit(dirtySecret);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("60000000000000000000")
+    );
+
+    // Attempt SelectMeNot (selectMeNot(bytes4))
+    // https://emn178.github.io/online-tools/keccak_256.html
+    await selectMeNot.selectMeNot("0x38c1f6d3");
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("70000000000000000000")
     );
   });
 });
