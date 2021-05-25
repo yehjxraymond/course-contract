@@ -21,6 +21,7 @@ describe("CourseContract", () => {
       wishingWell,
       dirtyDirtySecret,
       selectMeNot,
+      findMyABI,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -78,6 +79,14 @@ describe("CourseContract", () => {
     await selectMeNot.selectMeNot("0x38c1f6d3");
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("70000000000000000000")
+    );
+
+    // Attempt FindMyABI
+    await findMyABI.initiate();
+    await findMyABI.meaningOfLife(42);
+    await findMyABI.noMoneyNoHoney({ value: "0x01" });
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("80000000000000000000")
     );
   });
 });
