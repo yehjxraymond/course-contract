@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { BigNumber } = require("ethers");
+const { deployAllLevels } = require("../src/deployLevels");
 
 describe("CourseContract", () => {
   it("should work as expected", async () => {
@@ -13,12 +14,11 @@ describe("CourseContract", () => {
     const tokenAddress = await courseContract.courseToken();
     const courseToken = await ethers.getContractAt("CourseToken", tokenAddress);
 
-    const HelloWorld = await ethers.getContractFactory("HelloWorld");
-    const helloWorld = await HelloWorld.deploy(courseContract.address);
-
-    await helloWorld.deployed();
-
-    await courseContract.addLevel(helloWorld.address);
+    const [helloWorld, readAndWrite, myBlockNumber] = await deployAllLevels(
+      courseContract,
+      ethers,
+      false
+    );
 
     // Challenger can attempt level and be awarded tokens
     await helloWorld.connect(addr1).helloWorld();
@@ -35,6 +35,20 @@ describe("CourseContract", () => {
     // Challenger may not attempt challenge again
     await expect(helloWorld.connect(addr1).helloWorld()).to.be.revertedWith(
       "Challenger has completed level before"
+    );
+
+    // Attempt ReadAndWrite
+    const readAndWriteAns = await readAndWrite.notSoSecret();
+    await readAndWrite.submit(readAndWriteAns);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("20000000000000000000")
+    );
+
+    // Attempt MyBlockNumber
+    const nextBlockNumber = (await owner.provider.getBlockNumber()) + 1;
+    await myBlockNumber.submit(nextBlockNumber);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("30000000000000000000")
     );
   });
 });

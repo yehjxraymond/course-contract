@@ -4,9 +4,9 @@ pragma solidity ^0.5.17;
 import "../ILevelContract.sol";
 import "../ICourseContract.sol";
 
-// Simple smart contract, goal is simply to call the helloWorld function
-contract HelloWorld is ILevelContract {
-    string public name = "Hello World";
+// Guess(?) the block number and be rewarded
+contract MyBlockNumber is ILevelContract {
+    string public name = "My Block Number";
     uint256 public credits = 10e18;
     ICourseContract public course;
 
@@ -14,7 +14,8 @@ contract HelloWorld is ILevelContract {
         course = ICourseContract(courseContract);
     }
 
-    function helloWorld() public {
+    function submit(uint256 guess) public {
+        require(block.number == guess);
         course.creditToken(msg.sender);
     }
 }
