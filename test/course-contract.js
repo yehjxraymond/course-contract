@@ -22,6 +22,7 @@ describe("CourseContract", () => {
       dirtyDirtySecret,
       selectMeNot,
       findMyABI,
+      hashCrack,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -87,6 +88,12 @@ describe("CourseContract", () => {
     await findMyABI.noMoneyNoHoney({ value: "0x01" });
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("80000000000000000000")
+    );
+
+    // Attempt HashCrack
+    await hashCrack.submit(52);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("100000000000000000000")
     );
   });
 });
