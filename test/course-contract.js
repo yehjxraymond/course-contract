@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { BigNumber } = require("ethers");
+const { BigNumber, utils } = require("ethers");
 const { deployAllLevels } = require("../src/deployLevels");
 
 describe("CourseContract", () => {
@@ -14,11 +14,8 @@ describe("CourseContract", () => {
     const tokenAddress = await courseContract.courseToken();
     const courseToken = await ethers.getContractAt("CourseToken", tokenAddress);
 
-    const [helloWorld, readAndWrite, myBlockNumber] = await deployAllLevels(
-      courseContract,
-      ethers,
-      false
-    );
+    const [helloWorld, readAndWrite, myBlockNumber, wishingWell] =
+      await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
     await helloWorld.connect(addr1).helloWorld();
@@ -49,6 +46,15 @@ describe("CourseContract", () => {
     await myBlockNumber.submit(nextBlockNumber);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("30000000000000000000")
+    );
+
+    // Attempt WishingWell
+    await owner.sendTransaction({
+      to: wishingWell.address,
+      value: utils.parseEther("0.1"),
+    });
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("40000000000000000000")
     );
   });
 });
