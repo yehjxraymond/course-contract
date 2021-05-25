@@ -7,6 +7,7 @@ import "../ILevelContract.sol";
 import "../ICourseContract.sol";
 
 // Simple smart contract, goal is simply to call the helloWorld function
+// Hint: The input is a number between 0 - 100
 contract HashCrack is ILevelContract {
     string public name = "Hash Crack";
     uint256 public credits = 20e18;

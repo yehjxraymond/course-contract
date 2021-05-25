@@ -7,6 +7,7 @@ const LEVEL_CONTRACTS = [
   "SelectMeNot",
   "FindMyABI",
   "HashCrack",
+  "HeSaysSheSays",
 ];
 
 const deployAllLevels = async (courseContract, ethers, log) => {
