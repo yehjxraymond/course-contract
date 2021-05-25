@@ -7,7 +7,7 @@ import "../ICourseContract.sol";
 
 // The contract has a secret (private) variable. Guess the variable to complete the challenge.
 contract DirtyDirtySecret is ILevelContract {
-    string public name = "Read & Write";
+    string public name = "Dirty Dirty Secret";
     uint256 public credits = 20e18;
     ICourseContract public course;
 
