@@ -25,6 +25,7 @@ describe("CourseContract", () => {
       hashCrack,
       heSaysSheSays,
       noticeBoard,
+      hitMeBabyOneMoreTime,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -113,6 +114,7 @@ describe("CourseContract", () => {
     );
 
     // Exploit NoticeBoard
+    // https://programtheblockchain.com/posts/2018/03/09/understanding-ethereum-smart-contract-storage/
     const Storage = await ethers.getContractFactory("Storage");
     const storage = await Storage.deploy();
     await storage.deployed();
@@ -135,5 +137,17 @@ describe("CourseContract", () => {
         await courseToken.balanceOf(addr1.address)
       )
     ).to.eq(true);
+
+    // Attempt HitMeBabyOneMoreTime
+    const ExploitHitMeBabyOneMoreTime = await ethers.getContractFactory(
+      "ExploitHitMeBabyOneMoreTime"
+    );
+    const exploitHitMeBabyOneMoreTime =
+      await ExploitHitMeBabyOneMoreTime.deploy();
+    await exploitHitMeBabyOneMoreTime.deployed();
+    await exploitHitMeBabyOneMoreTime.exploit(hitMeBabyOneMoreTime.address);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("140000000000000000000")
+    );
   });
 });

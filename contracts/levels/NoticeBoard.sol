@@ -1,4 +1,3 @@
-// Call with secret variable
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.5.17;
 
