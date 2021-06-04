@@ -29,6 +29,7 @@ describe("CourseContract", () => {
       imFeelingLucky,
       jiXiangKat,
       spendthrift,
+      iRobot,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -183,6 +184,14 @@ describe("CourseContract", () => {
     await spendthrift.gimmeYourCard(exploitSpendthrift.address);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("210000000000000000000")
+    );
+
+    // Attempt IRobot
+    const ExploitIRobot = await ethers.getContractFactory("ExploitIRobot");
+    const exploitIRobot = await ExploitIRobot.deploy();
+    await exploitIRobot.exploit(iRobot.address);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("230000000000000000000")
     );
   });
 });
