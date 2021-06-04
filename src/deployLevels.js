@@ -10,6 +10,7 @@ const LEVEL_CONTRACTS = [
   "HeSaysSheSays",
   "NoticeBoard",
   "HitMeBabyOneMoreTime",
+  "ImFeelingLucky",
 ];
 
 const deployAllLevels = async (courseContract, ethers, log) => {

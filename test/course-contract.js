@@ -26,6 +26,7 @@ describe("CourseContract", () => {
       heSaysSheSays,
       noticeBoard,
       hitMeBabyOneMoreTime,
+      imFeelingLucky,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -148,6 +149,18 @@ describe("CourseContract", () => {
     await exploitHitMeBabyOneMoreTime.exploit(hitMeBabyOneMoreTime.address);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("140000000000000000000")
+    );
+
+    // Attempt ImFeelingLucky
+    const ExploitImFeelingLucky = await ethers.getContractFactory(
+      "ExploitImFeelingLucky"
+    );
+    const exploitImFeelingLucky = await ExploitImFeelingLucky.deploy();
+    for (let i = 0; i < 10; i += 1) {
+      await exploitImFeelingLucky.exploit(imFeelingLucky.address);
+    }
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("170000000000000000000")
     );
   });
 });
