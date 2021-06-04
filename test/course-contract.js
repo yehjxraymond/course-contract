@@ -1,4 +1,4 @@
-const { expect, util } = require("chai");
+const { expect } = require("chai");
 const { BigNumber, utils } = require("ethers");
 const { deployAllLevels } = require("../src/deployLevels");
 
@@ -30,6 +30,7 @@ describe("CourseContract", () => {
       jiXiangKat,
       spendthrift,
       iRobot,
+      moneyLaunderer,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -192,6 +193,18 @@ describe("CourseContract", () => {
     await exploitIRobot.exploit(iRobot.address);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("230000000000000000000")
+    );
+
+    // Attempt MoneyLaunderer
+    const ExploitMoneyLaunderer = await ethers.getContractFactory(
+      "ExploitMoneyLaunderer"
+    );
+    const exploitMoneyLaunderer = await ExploitMoneyLaunderer.deploy();
+    await moneyLaunderer.launder(exploitMoneyLaunderer.address, {
+      value: utils.parseEther("0.01"),
+    });
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("250000000000000000000")
     );
   });
 });
