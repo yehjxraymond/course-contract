@@ -32,6 +32,7 @@ describe("CourseContract", () => {
       iRobot,
       moneyLaunderer,
       mathOlympiad,
+      connectTheDot,
     ] = await deployAllLevels(courseContract, ethers, false);
 
     // Challenger can attempt level and be awarded tokens
@@ -216,6 +217,16 @@ describe("CourseContract", () => {
     await mathOlympiad.compete(exploitMathOlympiad.address);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("270000000000000000000")
+    );
+
+    // Attempt ConnectTheDot
+    const ExploitConnectTheDot = await ethers.getContractFactory(
+      "ExploitConnectTheDot"
+    );
+    const exploitConnectTheDot = await ExploitConnectTheDot.deploy();
+    await connectTheDot.functions.connect(exploitConnectTheDot.address);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("290000000000000000000")
     );
   });
 });
