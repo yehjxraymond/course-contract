@@ -7,6 +7,7 @@ const hre = require("hardhat");
 const { deployAllLevels } = require("../src/deployLevels");
 
 async function main() {
+  console.log(arguments);
   const CourseContract = await hre.ethers.getContractFactory("CourseContract");
   const courseContract = await CourseContract.deploy("Course Token", "CTK");
 
@@ -23,16 +24,6 @@ async function main() {
   console.log("courseToken deployed to:", courseToken.address);
 
   await deployAllLevels(courseContract, hre.ethers, true);
-
-  // const HelloWorld = await hre.ethers.getContractFactory("HelloWorld");
-  // const helloWorld = await HelloWorld.deploy(courseContract.address);
-
-  // await helloWorld.deployed();
-
-  // console.log("helloWorld deployed to:", helloWorld.address);
-
-  // await courseContract.addLevel(helloWorld.address);
-  // console.log("Loaded level: helloWorld");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -33,7 +33,7 @@ describe("CourseContract", () => {
       moneyLaunderer,
       mathOlympiad,
       connectTheDot,
-    ] = await deployAllLevels(courseContract, ethers, false);
+    ] = await deployAllLevels({ courseContract, ethers, log: false });
 
     // Challenger can attempt level and be awarded tokens
     await helloWorld.connect(addr1).helloWorld();

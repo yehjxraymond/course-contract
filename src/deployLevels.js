@@ -19,9 +19,9 @@ const LEVEL_CONTRACTS = [
   "ConnectTheDot",
 ];
 
-const deployAllLevels = async (courseContract, ethers, log) => {
+const deployAllLevels = async ({ courseContract, ethers, log, skip = 0 }) => {
   const levels = [];
-  for (let i = 0; i < LEVEL_CONTRACTS.length; i += 1) {
+  for (let i = skip; i < LEVEL_CONTRACTS.length; i += 1) {
     const level = LEVEL_CONTRACTS[i];
     const LevelContract = await ethers.getContractFactory(level);
     const levelContract = await LevelContract.deploy(courseContract.address);
