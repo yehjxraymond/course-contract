@@ -34,6 +34,7 @@ describe("CourseContract", () => {
       mathOlympiad,
       connectTheDot,
       crystalBall,
+      kittyBreeder,
     ] = await deployAllLevels({ courseContract, ethers, log: false });
 
     // Challenger can attempt level and be awarded tokens
@@ -238,6 +239,16 @@ describe("CourseContract", () => {
     await exploitCrystalBall.exploit(crystalBall.address);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("320000000000000000000")
+    );
+
+    // Attempt KittyBreeder
+    const ExploitKittyBreeder = await ethers.getContractFactory(
+      "ExploitKittyBreeder"
+    );
+    const exploitKittyBreeder = await ExploitKittyBreeder.deploy();
+    await kittyBreeder.hereTakeThis(exploitKittyBreeder.address, 1);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("340000000000000000000")
     );
   });
 });
