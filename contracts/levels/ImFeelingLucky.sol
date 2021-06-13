@@ -6,7 +6,6 @@ pragma solidity ^0.5.17;
 import "../ILevelContract.sol";
 import "../ICourseContract.sol";
 
-// Simple smart contract, goal is simply to call the helloWorld function
 contract ImFeelingLucky is ILevelContract {
     string public name = "I'm Feeling Lucky";
     uint256 public credits = 30e18;

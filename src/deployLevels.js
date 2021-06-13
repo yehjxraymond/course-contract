@@ -17,6 +17,7 @@ const LEVEL_CONTRACTS = [
   "MoneyLaunderer",
   "MathOlympiad",
   "ConnectTheDot",
+  "CrystalBall",
 ];
 
 const deployAllLevels = async ({ courseContract, ethers, log, skip = 0 }) => {

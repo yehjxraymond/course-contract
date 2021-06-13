@@ -33,6 +33,7 @@ describe("CourseContract", () => {
       moneyLaunderer,
       mathOlympiad,
       connectTheDot,
+      crystalBall,
     ] = await deployAllLevels({ courseContract, ethers, log: false });
 
     // Challenger can attempt level and be awarded tokens
@@ -227,6 +228,16 @@ describe("CourseContract", () => {
     await connectTheDot.functions.connect(exploitConnectTheDot.address);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("290000000000000000000")
+    );
+
+    // Attempt CrystalBall
+    const ExploitCrystalBall = await ethers.getContractFactory(
+      "ExploitCrystalBall"
+    );
+    const exploitCrystalBall = await ExploitCrystalBall.deploy();
+    await exploitCrystalBall.exploit(crystalBall.address);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("320000000000000000000")
     );
   });
 });
