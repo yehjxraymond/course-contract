@@ -35,6 +35,7 @@ describe("CourseContract", () => {
       connectTheDot,
       crystalBall,
       kittyBreeder,
+      ifYouGotItFlauntIt,
     ] = await deployAllLevels({ courseContract, ethers, log: false });
 
     // Challenger can attempt level and be awarded tokens
@@ -249,6 +250,19 @@ describe("CourseContract", () => {
     await kittyBreeder.hereTakeThis(exploitKittyBreeder.address, 1);
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("340000000000000000000")
+    );
+
+    // Attempt IfYouGotItFlauntIt
+    const nfts = await Promise.all([
+      ExploitKittyBreeder.deploy(),
+      ExploitKittyBreeder.deploy(),
+      ExploitKittyBreeder.deploy(),
+      ExploitKittyBreeder.deploy(),
+      ExploitKittyBreeder.deploy(),
+    ]);
+    await ifYouGotItFlauntIt.showOff(nfts.map((nft) => [nft.address, 1]));
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("360000000000000000000")
     );
   });
 });
