@@ -8,16 +8,14 @@ import "../ICourseContract.sol";
 
 interface ERC721 {
     function ownerOf(uint256 _tokenId) external view returns (address);
-
-    function balanceOf(address _owner) external view returns (uint256);
 }
 
-// Send 5 NFT from different contracts here
+// Show me 5 NFT from different contracts here
 contract IfYouGotItFlauntIt is ILevelContract {
     string public name = "If You Got It Flaunt It";
     uint256 public credits = 20e18;
     ICourseContract public course;
-    mapping(address => bool) nullifier;
+    mapping(bytes32 => bool) nullifier;
 
     struct NFT {
         address contractAddr;
@@ -32,15 +30,18 @@ contract IfYouGotItFlauntIt is ILevelContract {
         require(nfts.length == 5, "Show me 5 NFTs");
         for (uint256 i = 0; i < nfts.length; i++) {
             ERC721 token = ERC721(nfts[i].contractAddr);
-            require(token.balanceOf(address(this)) == 1);
-            require(token.ownerOf(nfts[i].id) == address(this));
-            nullify(nfts[i].contractAddr);
+            require(token.ownerOf(nfts[i].id) == msg.sender);
+
+            // Prevents the submission of the same NFT
+            nullify(
+                keccak256(abi.encodePacked(nfts[i].contractAddr, nfts[i].id))
+            );
         }
         course.creditToken(msg.sender);
     }
 
-    function nullify(address addr) internal {
-        require(!nullifier[addr], "Not allowed to use this address");
-        nullifier[addr] = true;
+    function nullify(bytes32 h) internal {
+        require(!nullifier[h], "Not allowed to use this hash");
+        nullifier[h] = true;
     }
 }

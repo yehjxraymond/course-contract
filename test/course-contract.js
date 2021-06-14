@@ -253,14 +253,15 @@ describe("CourseContract", () => {
     );
 
     // Attempt IfYouGotItFlauntIt
-    const nfts = await Promise.all([
-      ExploitKittyBreeder.deploy(),
-      ExploitKittyBreeder.deploy(),
-      ExploitKittyBreeder.deploy(),
-      ExploitKittyBreeder.deploy(),
-      ExploitKittyBreeder.deploy(),
-    ]);
-    await ifYouGotItFlauntIt.showOff(nfts.map((nft) => [nft.address, 1]));
+    const ExploitIfYouGotItFlauntIt = await ethers.getContractFactory(
+      "ExploitIfYouGotItFlauntIt"
+    );
+    const exploitIfYouGotItFlauntIt = await ExploitIfYouGotItFlauntIt.deploy();
+    await ifYouGotItFlauntIt.showOff(
+      new Array(5)
+        .fill(null)
+        .map((_null, i) => [exploitIfYouGotItFlauntIt.address, i])
+    );
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("360000000000000000000")
     );
