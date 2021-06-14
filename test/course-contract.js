@@ -36,6 +36,7 @@ describe("CourseContract", () => {
       crystalBall,
       kittyBreeder,
       ifYouGotItFlauntIt,
+      creepyCatLady,
     ] = await deployAllLevels({ courseContract, ethers, log: false });
 
     // Challenger can attempt level and be awarded tokens
@@ -264,6 +265,16 @@ describe("CourseContract", () => {
     );
     await expect(await courseToken.balanceOf(owner.address)).to.equal(
       BigNumber.from("360000000000000000000")
+    );
+
+    // Attempt CreepyCatLady
+    const ExploitCreepyCatLady = await ethers.getContractFactory(
+      "ExploitCreepyCatLady"
+    );
+    const exploitCreepyCatLady = await ExploitCreepyCatLady.deploy();
+    await creepyCatLady.notLooking(exploitCreepyCatLady.address, 1);
+    await expect(await courseToken.balanceOf(owner.address)).to.equal(
+      BigNumber.from("380000000000000000000")
     );
   });
 });
